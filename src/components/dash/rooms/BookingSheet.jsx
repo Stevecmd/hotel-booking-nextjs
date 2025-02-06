@@ -9,12 +9,14 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { BedDouble, CreditCard, Hotel, Users } from "lucide-react";
+import { BedDouble, CreditCard, Hotel, Users, CheckCircle, Brush } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format } from "date-fns";
 import { getStatusColors } from '@/lib/roomStatusColors';
+import { completeRoomCleaning, startRoomCleaning } from "@/lib/roomUtils";
+
 
 /**
  * BookingSheet component for handling room bookings and related operations
@@ -39,6 +41,7 @@ const BookingSheet = ({ room, isOpen, onClose }) => {
         nights: '1'
     });
     const [latestBooking, setLatestBooking] = useState(null); // Ensure latestBooking is tracked
+    const [isCleaningComplete, setIsCleaningComplete] = useState(false);
 
     // Reset form when room changes
     useEffect(() => {
@@ -142,9 +145,9 @@ const BookingSheet = ({ room, isOpen, onClose }) => {
      * @returns {string} returns.variant - Button variant
      * @returns {Function} returns.onClick - Button click handler
      */
-    const getButtonState = () => {
+        const getButtonState = () => {
         // Get base state from primary status
-        const baseState = (() => {
+            const baseState = (() => {
             switch (room?.status) {
                 case "AVAILABLE":
                     return { text: "Book Now", variant: "default", onClick: () => handleBookNow() };
@@ -374,6 +377,35 @@ const BookingSheet = ({ room, isOpen, onClose }) => {
         } catch (error) {
             toast.error(error.message);
             console.error("Cancel booking error:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleCleaningComplete = async () => {
+        try {
+            setIsLoading(true);
+            await completeRoomCleaning(room._id);
+            setIsCleaningComplete(true);
+            toast.success("Room cleaning completed");
+            onClose();
+            window.location.reload();
+        } catch (error) {
+            toast.error("Failed to complete room cleaning");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleStartCleaning = async () => {
+        try {
+            setIsLoading(true);
+            await startRoomCleaning(room._id);
+            toast.success("Room cleaning started");
+            onClose();
+            window.location.reload();
+        } catch (error) {
+            toast.error("Failed to start room cleaning");
         } finally {
             setIsLoading(false);
         }
@@ -675,7 +707,7 @@ const BookingSheet = ({ room, isOpen, onClose }) => {
 
 {/* - - - footer section start - - - - - - - - - - - - - - - - - - - - -  */}
             <div className="absolute bottom-0 left-0 right-0 p-4 border-t bg-white">
-<div className="flex items-center justify-between">
+                <div className="flex items-center justify-between">
                     <div>
                         <div className="text-sm text-muted-foreground">Total Amount</div>
                         <div className="text-2xl font-semibold">KES {room?.price}</div>
@@ -683,6 +715,33 @@ const BookingSheet = ({ room, isOpen, onClose }) => {
                     </div>
 
                     <div className="flex gap-2">
+                        {/* Add Start Cleaning button */}
+                        {room?.status !== 'CLEANING' && room?.secondaryStatus !== 'CLEANING' && (
+                            <Button 
+                                onClick={handleStartCleaning}
+                                variant="outline" 
+                                size="sm"
+                                disabled={isLoading}
+                                className="flex items-center gap-2"
+                            >
+                                <Brush className="h-4 w-4" />
+                                Start Cleaning
+                            </Button>
+                        )}
+                        
+                        {/* Show cleaning button if either primary or secondary status is CLEANING */}
+                        {(room?.status === 'CLEANING' || room?.secondaryStatus === 'CLEANING') && (
+                            <Button 
+                                onClick={handleCleaningComplete}
+                                variant="outline" 
+                                size="sm"
+                                disabled={isLoading}
+                                className="flex items-center gap-2"
+                            >
+                                <CheckCircle className="h-4 w-4" />
+                                Complete Cleaning
+                            </Button>
+                        )}
                         {(room?.activeBooking || room?.status === 'BOOKED' || room?.status === 'OCCUPIED') && (
                             <Button 
                                 variant='outline' 
@@ -701,8 +760,8 @@ const BookingSheet = ({ room, isOpen, onClose }) => {
                             {buttonState.text}
                         </Button>
                     </div>
-                    </div>
                 </div>
+            </div>
             {/* - - - footer section end - - - - - - - - - - - - - - - - - - - - -  */}
         </SheetContent>
     </Sheet>
