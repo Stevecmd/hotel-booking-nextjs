@@ -29,6 +29,8 @@ export async function POST(request, { params }) {
         if (currentRoom.status === '') {
             // If room has no status, use primary status
             updateData.status = 'CLEANING';
+            // If room is available, use secondary status
+            // updateData.secondaryStatus = 'CLEANING';
         } else {
             // Otherwise use secondary status
             updateData.secondaryStatus = 'CLEANING';
