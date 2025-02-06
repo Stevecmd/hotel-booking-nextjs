@@ -24,7 +24,14 @@ export async function POST(request) {
             checkInDate: body.checkInDate,
             checkOutDate: body.checkOutDate,
             totalCost: body.totalCost,
-            guestDetails: body.guestDetails,
+            guestDetails: {
+                ...body.guestDetails,
+                roomServiceRequests: body.guestDetails.roomServiceRequests?.map(request => ({
+                    type: request,
+                    status: 'pending',
+                    requestedAt: new Date()
+                })) || []
+            },
             status: 'CONFIRMED',
             paymentStatus: body.paymentStatus || 'pending'
         });
@@ -36,7 +43,9 @@ export async function POST(request) {
             customer: {
                 name: `${body.guestDetails.firstName} ${body.guestDetails.lastName}`,
                 checkIn: body.checkInDate,
-                checkOut: body.checkOutDate
+                checkOut: body.checkOutDate,
+                specialRequests: body.guestDetails.specialRequests,
+                roomServiceRequests: body.guestDetails.roomServiceRequests
             }
         });
 

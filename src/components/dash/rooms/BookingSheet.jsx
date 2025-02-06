@@ -27,8 +27,8 @@ const BookingSheet = ({ room, isOpen, onClose }) => {
     const { user } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [date, setDate] = useState({
-        from: new Date(),
-        to: new Date(new Date().setDate(new Date().getDate() + 1))
+        from: null,
+        to: null
     });
     const [formData, setFormData] = useState({
         firstName: '',
@@ -52,15 +52,71 @@ const BookingSheet = ({ room, isOpen, onClose }) => {
         }
     }, [room]);
 
-    // Update nights when dates change
+    // Safe date setter that validates input
+    // when updating nights when dates change
+
+    const handleDateSelect = (newDate) => {
+        if (!newDate) {
+            toast.error("Please select valid dates");
+            return;
+        }
+
+        // Ensure both dates are present
+        if (!newDate.from || !newDate.to) {
+            setDate(newDate); // Still update the date state for partial selection
+            return; // But don't proceed with calculations
+        }
+
+        setDate(newDate);
+    };
+
+    // Update nights when dates change with better error handling
     useEffect(() => {
-        if (date.from && date.to) {
+        try {
+            // Guard clause for null or undefined dates
+            if (!date || !date.from || !date.to) {
+                setFormData(prev => ({
+                    ...prev,
+                    nights: '1'
+                }));
+                return;
+            }
+
+            const checkInDate = new Date(date.from);
+            const checkOutDate = new Date(date.to);
+
+            // Validate dates
+            if (isNaN(checkInDate.getTime()) || isNaN(checkOutDate.getTime())) {
+                toast.error("Invalid date selection");
+                return;
+            }
+
+            // Calculate nights
             const nights = Math.ceil(
-                (new Date(date.to) - new Date(date.from)) / (1000 * 60 * 60 * 24)
+                (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)
             );
+
+            // Validate number of nights
+            if (nights < 1) {
+                toast.error("Check-out must be after check-in");
+                setDate({
+                    from: date.from,
+                    to: null
+                });
+                return;
+            }
+
+            // Update form data with valid nights
             setFormData(prev => ({
                 ...prev,
                 nights: nights.toString()
+            }));
+        } catch (error) {
+            toast.error("Error calculating stay duration");
+            console.error("Date calculation error:", error);
+            setFormData(prev => ({
+                ...prev,
+                nights: '1'
             }));
         }
     }, [date]);
@@ -476,9 +532,10 @@ const BookingSheet = ({ room, isOpen, onClose }) => {
                                         <Calendar
                                             mode='range'
                                             selected={date}
-                                            onSelect={setDate}
+                                            onSelect={handleDateSelect}
                                             numberOfMonths={2}
                                             className='flex flex-col sm:flex-row rounded-lg border p-4'
+                                            disabled={(date) => date < new Date()} // Disable past dates
                                             classNames={{
                                                 months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
                                                 head_cell: "w-9 font-normal text-xs",
@@ -540,13 +597,13 @@ const BookingSheet = ({ room, isOpen, onClose }) => {
                         </div>
                         <div className="space-y-4">
                             <div className="font-medium">Special Requests</div>
-                            <textarea
-                                name="specialRequests"
-                                value={formData.specialRequests}
-                                onChange={handleInputChange}
-                                className="w-full h-24 p-2 border rounded-md focus:outline focus:outline-black"
+                                    <textarea
+                                        name="specialRequests"
+                                        value={formData.specialRequests}
+                                        onChange={handleInputChange}
+                                        className="w-full h-24 p-2 border rounded-md focus:outline focus:outline-black"
                                 placeholder="Enter any special requests or notes here..."
-                            ></textarea>
+                                    ></textarea>
                         </div>
                     </TabsContent>
                     {/* - - - tabs 2 (order) end - - - - - - - - - - - - - - - - - - - - -  */}
