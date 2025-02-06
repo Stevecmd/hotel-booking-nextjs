@@ -1,3 +1,39 @@
+export const updateRoomStatus = async (roomId, bookingId = null, status = 'AVAILABLE', secondaryStatus = 'NONE') => {
+    try {
+        const result = await Room.findByIdAndUpdate(roomId, {
+            status: status,
+            activeBooking: bookingId,
+            secondaryStatus: secondaryStatus
+        }, { new: true })
+        .populate({
+            path: 'activeBooking',
+            populate: {
+                path: 'customer',
+                select: 'firstName lastName emailAddress'
+            }
+        });
+        return result;
+    } catch (error) {
+        console.error('Error updating room status:', error);
+        throw error;
+    }
+};
+
+// Add helper function to manage cleaning status specifically
+export const updateRoomCleaningStatus = async (roomId, isCleaning) => {
+    try {
+        const result = await Room.findByIdAndUpdate(roomId, {
+            secondaryStatus: isCleaning ? 'CLEANING' : 'NONE'
+        }, { new: true });
+        return result;
+    } catch (error) {
+        console.error('Error updating room cleaning status:', error);
+        throw error;
+    }
+};
+
+
+
 /**
  * Completes the room cleaning process by sending a DELETE request to the server
  * to remove the cleaning status of the specified room. If the room's primary status
