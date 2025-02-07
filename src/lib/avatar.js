@@ -29,13 +29,9 @@ const avatarGenerator = async (gender, firstName) => {
 		beardProbability = "0";
 	}
 
-	// Build the query string based on options
-	const queryString = new URLSearchParams({
-		...options, // Spread the options object to include additional parameters
-	});
 
-	// Build url string
-	const url = `${baseUrl}${avatarStyle}/svg?seed=${firstName}&hair=${hairVariant}&beardProbability=${beardProbability}&${queryString.toString()}`;
+	// Build url string based on options
+	const url = `${baseUrl}${avatarStyle}/svg?seed=${firstName}&hair=${hairVariant}&beardProbability=${beardProbability}&${new URLSearchParams(options).toString()}`;
 	//debug
 	//console.log(url);
 

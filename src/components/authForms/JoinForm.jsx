@@ -20,6 +20,20 @@ export const formSchema = z
 		password: z.string().min(6, { message: "Must be a minimum of 6 characters" }),
 		passwordConfirm: z.string(),
 		gender: z.enum(["male", "female"]),
+		// New optional fields
+		currentAddress: z.string().optional(),
+		contactNumber: z.string().optional(),
+		idType: z.enum(["National-ID", "Passport"]).optional(),
+		idNumber: z.string().optional(),
+		// Payment information fields
+		cardholderName: z.string().optional(),
+		cardNumber: z.string().optional(),
+		expiryDate: z.string().optional(),
+		cvv: z.string().optional(),
+		billingAddress: z.string().optional(),
+		city: z.string().optional(),
+		postalCode: z.string().optional(),
+		country: z.string().optional()
 	})
 	.refine(
 		(data) => {
@@ -51,6 +65,18 @@ const JoinForm = () => {
 			password: "",
 			passwordConfirm: "",
 			gender: "",
+			currentAddress: "",
+			contactNumber: "",
+			idType: "National-ID",
+			idNumber: "",
+			cardholderName: "",
+			cardNumber: "",
+			expiryDate: "",
+			cvv: "",
+			billingAddress: "",
+			city: "",
+			postalCode: "",
+			country: ""
 		},
 	});
 
@@ -131,7 +157,7 @@ const JoinForm = () => {
 							return (
 								<FormItem>
 									<FormLabel>Gender</FormLabel>
-									<Select onValueChange={field.onChange} value={field.value || ""}>
+									<Select onValueChange={field.onChange} value={field.value}>
 										<FormControl>
 											<SelectTrigger>
 												<SelectValue placeholder="Choose your gender" />
@@ -143,7 +169,6 @@ const JoinForm = () => {
 											<SelectItem value="female">Female</SelectItem>
 										</SelectContent>
 									</Select>
-
 									<FormMessage />
 								</FormItem>
 							);
@@ -204,6 +229,232 @@ const JoinForm = () => {
 						}}
 					/>
 					{/* End of passwordConfirm field */}
+
+					{/* Start of current address field */}
+					<FormField
+						control={form.control}
+						name="currentAddress"
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<FormLabel>Current Address</FormLabel>
+									<FormControl>
+										<Input placeholder="Current Address" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
+					/>
+					{/* End of current address field */}
+
+					{/* Start of contact number field */}
+					<FormField
+						control={form.control}
+						name="contactNumber"
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<FormLabel>Contact Number</FormLabel>
+									<FormControl>
+										<Input placeholder="Contact Number" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
+					/>
+					{/* End of contact number field */}
+
+					{/* Start of ID type select */}
+					<FormField
+						control={form.control}
+						name="idType"
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<FormLabel>ID Type</FormLabel>
+									<Select onValueChange={field.onChange} value={field.value || ""}>
+										<FormControl>
+											<SelectTrigger>
+												<SelectValue placeholder="Choose your ID type" />
+											</SelectTrigger>
+										</FormControl>
+
+										<SelectContent>
+											<SelectItem value="National-ID">National-ID</SelectItem>
+											<SelectItem value="Passport">Passport</SelectItem>
+										</SelectContent>
+									</Select>
+
+									<FormMessage />
+								</FormItem>
+							);
+						}}
+					/>
+					{/* End of ID type select */}
+
+					{/* Start of ID number field */}
+					<FormField
+						control={form.control}
+						name="idNumber"
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<FormLabel>ID Number</FormLabel>
+									<FormControl>
+										<Input placeholder="ID Number" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
+					/>
+					{/* End of ID number field */}
+
+					{/* Start of cardholder name field */}
+					<FormField
+						control={form.control}
+						name="cardholderName"
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<FormLabel>Cardholder Name</FormLabel>
+									<FormControl>
+										<Input placeholder="Cardholder Name" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
+					/>
+					{/* End of cardholder name field */}
+
+					{/* Start of card number field */}
+					<FormField
+						control={form.control}
+						name="cardNumber"
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<FormLabel>Card Number</FormLabel>
+									<FormControl>
+										<Input placeholder="Card Number" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
+					/>
+					{/* End of card number field */}
+
+					{/* Start of expiry date field */}
+					<FormField
+						control={form.control}
+						name="expiryDate"
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<FormLabel>Expiry Date</FormLabel>
+									<FormControl>
+										<Input placeholder="MM/YY" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
+					/>
+					{/* End of expiry date field */}
+
+					{/* Start of CVV field */}
+					<FormField
+						control={form.control}
+						name="cvv"
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<FormLabel>CVV</FormLabel>
+									<FormControl>
+										<Input type="password" maxLength={3} placeholder="CVV" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
+					/>
+					{/* End of CVV field */}
+
+					{/* Start of billing address field */}
+					<FormField
+						control={form.control}
+						name="billingAddress"
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<FormLabel>Billing Address</FormLabel>
+									<FormControl>
+										<Input placeholder="Billing Address" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
+					/>
+					{/* End of billing address field */}
+
+					{/* Start of city field */}
+					<FormField
+						control={form.control}
+						name="city"
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<FormLabel>City</FormLabel>
+									<FormControl>
+										<Input placeholder="City" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
+					/>
+					{/* End of city field */}
+
+					{/* Start of postal code field */}
+					<FormField
+						control={form.control}
+						name="postalCode"
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<FormLabel>Postal Code</FormLabel>
+									<FormControl>
+										<Input placeholder="Postal Code" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
+					/>
+					{/* End of postal code field */}
+
+					{/* Start of country field */}
+					<FormField
+						control={form.control}
+						name="country"
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<FormLabel>Country</FormLabel>
+									<FormControl>
+										<Input placeholder="Country" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
+					/>
+					{/* End of country field */}
 
 					{error && <p className="rounded-md border border-red-300 bg-red-100 p-2 text-sm font-medium text-destructive">{error}</p>}
 
