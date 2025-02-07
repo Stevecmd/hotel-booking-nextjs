@@ -57,7 +57,7 @@ const Footer = () => {
         </div>
         <div className='flex flex-col md:flex-row items-center md:w-auto gap-x-2'>
             <Image 
-              src="images/icons8-twitterx.svg" 
+              src="/images/icons8-twitterx.svg" 
               width={25} 
               height={25} 
               alt="Twitter logo"
@@ -65,7 +65,7 @@ const Footer = () => {
             <p>@MetroManor</p>
 
             <Image 
-              src="images/icons8-instagram.svg" 
+              src="/images/icons8-instagram.svg" 
               width={25} 
               height={25} 
               alt="Instagram logo"
@@ -73,7 +73,7 @@ const Footer = () => {
             <p>@MetroManor</p>
 
             <Image 
-              src="images/icons8-tiktok.svg" 
+              src="/images/icons8-tiktok.svg" 
               width={25} 
               height={25} 
               alt="TikTok logo"

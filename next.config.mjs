@@ -22,9 +22,14 @@ const nextConfig = {
           protocol: 'https',
           hostname: 'github.com',
         },
+        {
+          protocol: 'https',
+          hostname: 'avatars.githubusercontent.com',
+        },
       ],
+      dangerouslyAllowSVG: true, // Enable SVG support
+      contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;", // Add CSP for security
     }
 };
-
 
 export default nextConfig;
