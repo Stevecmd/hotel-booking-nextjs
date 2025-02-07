@@ -19,7 +19,7 @@ const JoinPage = () => {
 				{/* Logo ends here */}
 
 				{/* Form Card begins here */}
-				<Card className="mx-auto mt-14 max-w-sm">
+				<Card className="mx-auto mt-14 max-w-2xl">
 					<CardHeader>
 						<CardTitle className="text-xl">Join</CardTitle>
 						<CardDescription>Enter your information to create an account</CardDescription>

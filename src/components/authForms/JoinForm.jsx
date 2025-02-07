@@ -11,7 +11,30 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 
-// join form schema using zod
+
+/**
+ * Zod schema for validating the join form data
+ * @type {import('zod').ZodObject}
+ * 
+ * @property {string} firstName - User's first name, minimum 1 character
+ * @property {string} lastName - User's last name, minimum 1 character
+ * @property {string} emailAddress - Valid email address
+ * @property {string} password - Password with minimum 6 characters
+ * @property {string} passwordConfirm - Must match password field
+ * @property {'male' | 'female'} gender - User's gender
+ * @property {string} [currentAddress] - Optional current address
+ * @property {string} [contactNumber] - Optional contact number
+ * @property {'National-ID' | 'Passport'} [idType] - Optional ID type
+ * @property {string} [idNumber] - Optional ID number
+ * @property {string} [cardholderName] - Optional cardholder name
+ * @property {string} [cardNumber] - Optional card number
+ * @property {string} [expiryDate] - Optional card expiry date
+ * @property {string} [cvv] - Optional card CVV
+ * @property {string} [billingAddress] - Optional billing address
+ * @property {string} [city] - Optional city
+ * @property {string} [postalCode] - Optional postal code
+ * @property {string} [country] - Optional country
+ */
 export const formSchema = z
 	.object({
 		firstName: z.string().min(1, { message: "Must be 1 or more characters long" }),
@@ -108,20 +131,20 @@ const JoinForm = () => {
 	};
 
 	return (
-		<main className="my-5 flex min-h-full flex-col items-center justify-between">
+		<main className="my-5 flex min-h-screen flex-col items-center justify-center overflow-x-hidden">
 			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full max-w-full flex-col gap-5">
-					<div className="flex flex-col gap-4 sm:flex-row">
+				<form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full max-w-md flex-col gap-5 px-4 sm:px-0">
+					<div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
 						{/* Start of first name field */}
 						<FormField
 							control={form.control}
 							name="firstName"
 							render={({ field }) => {
 								return (
-									<FormItem>
+									<FormItem className="flex-1">
 										<FormLabel>First Name</FormLabel>
 										<FormControl>
-											<Input placeholder="First Name" {...field} />
+											<Input placeholder="First Name" {...field} className="max-w-xs" />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -136,10 +159,10 @@ const JoinForm = () => {
 							name="lastName"
 							render={({ field }) => {
 								return (
-									<FormItem>
+									<FormItem className="flex-1">
 										<FormLabel>Last Name</FormLabel>
 										<FormControl>
-											<Input placeholder="Last Name" {...field} />
+											<Input placeholder="Last Name" {...field} className="max-w-xs" />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -185,7 +208,7 @@ const JoinForm = () => {
 								<FormItem>
 									<FormLabel>Email Address</FormLabel>
 									<FormControl>
-										<Input placeholder="Email address" type="email" {...field} />
+										<Input placeholder="Email address" type="email" {...field} className="max-w-xs" />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -203,7 +226,7 @@ const JoinForm = () => {
 								<FormItem>
 									<FormLabel>Password</FormLabel>
 									<FormControl>
-										<Input placeholder="Password" type="password" {...field} />
+										<Input placeholder="Password" type="password" {...field} className="max-w-xs" />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -221,7 +244,7 @@ const JoinForm = () => {
 								<FormItem>
 									<FormLabel>Confirm Password</FormLabel>
 									<FormControl>
-										<Input placeholder="Confirm Password" type="password" {...field} />
+										<Input placeholder="Confirm Password" type="password" {...field} className="max-w-xs" />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -239,7 +262,7 @@ const JoinForm = () => {
 								<FormItem>
 									<FormLabel>Current Address</FormLabel>
 									<FormControl>
-										<Input placeholder="Current Address" {...field} />
+										<Input placeholder="Current Address" {...field} className="max-w-xs" />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -257,7 +280,7 @@ const JoinForm = () => {
 								<FormItem>
 									<FormLabel>Contact Number</FormLabel>
 									<FormControl>
-										<Input placeholder="Contact Number" {...field} />
+										<Input placeholder="Contact Number" {...field} className="max-w-xs" />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -303,7 +326,7 @@ const JoinForm = () => {
 								<FormItem>
 									<FormLabel>ID Number</FormLabel>
 									<FormControl>
-										<Input placeholder="ID Number" {...field} />
+										<Input placeholder="ID Number" {...field} className="max-w-xs" />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -321,7 +344,7 @@ const JoinForm = () => {
 								<FormItem>
 									<FormLabel>Cardholder Name</FormLabel>
 									<FormControl>
-										<Input placeholder="Cardholder Name" {...field} />
+										<Input placeholder="Cardholder Name" {...field} className="max-w-xs" />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -339,7 +362,7 @@ const JoinForm = () => {
 								<FormItem>
 									<FormLabel>Card Number</FormLabel>
 									<FormControl>
-										<Input placeholder="Card Number" {...field} />
+										<Input placeholder="Card Number" {...field} className="max-w-xs" />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -357,7 +380,7 @@ const JoinForm = () => {
 								<FormItem>
 									<FormLabel>Expiry Date</FormLabel>
 									<FormControl>
-										<Input placeholder="MM/YY" {...field} />
+										<Input placeholder="MM/YY" {...field} className="max-w-xs" />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -375,7 +398,7 @@ const JoinForm = () => {
 								<FormItem>
 									<FormLabel>CVV</FormLabel>
 									<FormControl>
-										<Input type="password" maxLength={3} placeholder="CVV" {...field} />
+										<Input type="password" maxLength={3} placeholder="CVV" {...field} className="max-w-xs" />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -393,7 +416,7 @@ const JoinForm = () => {
 								<FormItem>
 									<FormLabel>Billing Address</FormLabel>
 									<FormControl>
-										<Input placeholder="Billing Address" {...field} />
+										<Input placeholder="Billing Address" {...field} className="max-w-xs" />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -411,7 +434,7 @@ const JoinForm = () => {
 								<FormItem>
 									<FormLabel>City</FormLabel>
 									<FormControl>
-										<Input placeholder="City" {...field} />
+										<Input placeholder="City" {...field} className="max-w-xs" />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -429,7 +452,7 @@ const JoinForm = () => {
 								<FormItem>
 									<FormLabel>Postal Code</FormLabel>
 									<FormControl>
-										<Input placeholder="Postal Code" {...field} />
+										<Input placeholder="Postal Code" {...field} className="max-w-xs" />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -447,7 +470,7 @@ const JoinForm = () => {
 								<FormItem>
 									<FormLabel>Country</FormLabel>
 									<FormControl>
-										<Input placeholder="Country" {...field} />
+										<Input placeholder="Country" {...field} className="max-w-xs" />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
